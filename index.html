@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VidyaMitra - AI-powered career guidance platform for resume evaluation, skill analysis, and personalized career recommendations.">
+  <title>VidyaMitra – AI Career Guidance Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <script>
+    // Early theme initialization
+    (function() {
+      let savedTheme = localStorage.getItem('vm_theme') || 'dark';
+      if (savedTheme === 'system') savedTheme = 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-logo" onclick="navigate('landing')">
+      <div class="logo-icon">🎓</div>
+      <span>Vidya<span class="text-gradient">Mitra</span></span>
+    </div>
+    <div class="navbar-nav" id="nav-links">
+      <a href="#" onclick="navigate('landing')" class="active" data-page="landing">Home</a>
+      <a href="#" onclick="navigate('dashboard')" data-page="dashboard">Dashboard</a>
+      <a href="#" onclick="navigate('resume')" data-page="resume">Resume</a>
+      <a href="#" onclick="navigate('careers')" data-page="careers">Careers</a>
+      <a href="#" onclick="navigate('quiz')" data-page="quiz">Quiz</a>
+      <a href="#" onclick="navigate('interview')" data-page="interview">Interview</a>
+    </div>
+    <div class="navbar-actions" id="nav-actions">
+      <div class="theme-toggle" id="theme-toggle">
+        <button class="theme-btn" onclick="toggleThemeCycle()" id="theme-btn" title="Switch Theme">🌓</button>
+      </div>
+      <a href="signin.html" class="btn btn-sm btn-primary" id="nav-login-btn">Sign In</a>
+      <div class="navbar-user" id="nav-user" style="display:none;" onclick="toggleUserMenu()">
+        <div class="navbar-avatar" id="nav-avatar">U</div>
+        <span id="nav-username" style="font-size:0.9rem;font-weight:500;">User</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ SIDEBAR (shown when logged in) ═══ -->
+  <aside class="sidebar" id="sidebar" style="display:none;">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <div class="sidebar-item active" onclick="navigate('dashboard')" data-page="dashboard">
+        <span class="item-icon">📊</span>Dashboard
+      </div>
+      <div class="sidebar-item" onclick="navigate('profile')" data-page="profile">
+        <span class="item-icon">👤</span>Profile
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Resume</div>
+      <div class="sidebar-item" onclick="navigate('resume')" data-page="resume">
+        <span class="item-icon">📄</span>Resume Analysis
+      </div>
+      <div class="sidebar-item" onclick="navigate('resume-builder')" data-page="resume-builder">
+        <span class="item-icon">✏️</span>Resume Builder
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Career</div>
+      <div class="sidebar-item" onclick="navigate('skills')" data-page="skills">
+        <span class="item-icon">🎯</span>Skill Analysis
+      </div>
+      <div class="sidebar-item" onclick="navigate('careers')" data-page="careers">
+        <span class="item-icon">🚀</span>Career Paths
+      </div>
+      <div class="sidebar-item" onclick="navigate('learning')" data-page="learning">
+        <span class="item-icon">📚</span>Learning Plan
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Practice</div>
+      <div class="sidebar-item" onclick="navigate('quiz')" data-page="quiz">
+        <span class="item-icon">❓</span>Skill Quiz
+        <span class="sidebar-badge">New</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('interview')" data-page="interview">
+        <span class="item-icon">🎤</span>Mock Interview
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Insights</div>
+      <div class="sidebar-item" onclick="navigate('progress')" data-page="progress">
+        <span class="item-icon">📈</span>Progress
+      </div>
+      <div class="sidebar-item" onclick="navigate('resources')" data-page="resources">
+        <span class="item-icon">🔗</span>Resources
+      </div>
+    </div>
+    <div class="sidebar-section" style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border-color);">
+      <div class="sidebar-item" onclick="logout()" style="color:var(--error-400);">
+        <span class="item-icon">🚪</span>Sign Out
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ PAGE: LANDING ═══ -->
+  <div class="page active" id="page-landing">
+    <div class="landing-page">
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-badge animate-fadeInUp">✨ AI-Powered Career Guidance</div>
+          <h1 class="animate-fadeInUp delay-1">Your AI Career<br><span class="text-gradient">Mentor & Guide</span></h1>
+          <p class="animate-fadeInUp delay-2">Unlock your potential with intelligent resume analysis, personalized career recommendations, skill gap detection, and AI-powered interview preparation.</p>
+          <div class="hero-buttons animate-fadeInUp delay-3">
+            <a href="signup.html" class="btn btn-primary btn-lg">Get Started Free →</a>
+            <a href="signin.html" class="btn btn-secondary btn-lg">Sign In</a>
+          </div>
+          <div class="hero-stats animate-fadeInUp delay-4">
+            <div class="hero-stat"><div class="hero-stat-value">10K+</div><div class="hero-stat-label">Active Users</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">95%</div><div class="hero-stat-label">Success Rate</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">500+</div><div class="hero-stat-label">Career Paths</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">24/7</div><div class="hero-stat-label">AI Support</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-section" id="features">
+        <div class="section-header">
+          <h2 class="text-gradient">Powerful <span style="color:var(--text-primary)">Features</span></h2>
+          <p>Everything you need to accelerate your career growth, powered by cutting-edge AI.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card glass-card animate-fadeInUp delay-1" onclick="navigate('resume')" style="cursor:pointer;">
+            <div class="feature-icon" style="background:rgba(var(--primary-rgb), 0.15);">📄</div>
+            <h3>Resume Analysis</h3>
+            <p>AI evaluates your resume for formatting, skills, experience and provides actionable improvement suggestions.</p>
+          </div>
+          <div class="feature-card glass-card animate-fadeInUp delay-2" onclick="navigate('skills')" style="cursor:pointer;">
+            <div class="feature-icon" style="background:rgba(var(--accent-rgb), 0.15);">🎯</div>
+            <h3>Skill Gap Detection</h3>
+            <p>Identify missing skills by comparing your profile against industry requirements for your target role.</p>
+          </div>
+          <div class="feature-card glass-card animate-fadeInUp delay-3" onclick="navigate('careers')" style="cursor:pointer;">
+            <div class="feature-icon" style="background:rgba(var(--success-rgb), 0.15);">🚀</div>
+            <h3>Career Recommendations</h3>
+            <p>Get personalized career path suggestions based on your skills, experience, and interests.</p>
+          </div>
+          <div class="feature-card glass-card animate-fadeInUp delay-4" onclick="navigate('learning')" style="cursor:pointer;">
+            <div class="feature-icon" style="background:rgba(var(--accent-rgb), 0.15);">📚</div>
+            <h3>Learning Plans</h3>
+            <p>Structured weekly learning roadmaps with courses and tutorials to build the skills you need.</p>
+          </div>
+          <div class="feature-card glass-card animate-fadeInUp delay-5" onclick="navigate('interview')" style="cursor:pointer;">
+            <div class="feature-icon" style="background:rgba(var(--primary-rgb), 0.2);">🎤</div>
+            <h3>Mock Interviews</h3>
+            <p>Practice with AI-powered interview simulations and receive detailed feedback on your responses.</p>
+          </div>
+          <div class="feature-card glass-card animate-fadeInUp delay-6" onclick="navigate('progress')" style="cursor:pointer;">
+            <div class="feature-icon" style="background:rgba(var(--success-rgb), 0.2);">📈</div>
+            <h3>Progress Tracking</h3>
+            <p>Monitor your growth with detailed analytics on skills, quiz scores, and interview performance.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div class="cta-box">
+          <h2>Ready to Transform Your Career?</h2>
+          <p>Join thousands of professionals using VidyaMitra to land their dream jobs.</p>
+          <a href="signup.html" class="btn btn-lg">Start Your Journey →</a>
+        </div>
+      </section>
+
+      <footer class="landing-footer">
+        <p>© 2026 VidyaMitra by <a href="#">Code Super Kings</a>. AI-Powered Career Guidance Platform.</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Dedicated Sign-In and Sign-Up pages are now in signin.html and signup.html -->
+
+
+  <!-- ═══ PAGE: DASHBOARD ═══ -->
+  <div class="page" id="page-dashboard">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Welcome back, <span class="text-gradient" id="dash-username">User</span> 👋</h1>
+        <p>Here's an overview of your career preparation journey.</p>
+      </div>
+      <div class="dashboard-grid animate-fadeInUp delay-1">
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(var(--primary-rgb), 0.15);color:var(--primary-400);">📄</div>
+          <div class="stat-value text-gradient" id="dash-resume-score">72</div>
+          <div class="stat-label">Resume Score</div>
+          <div class="progress-bar"><div class="progress-bar-fill primary" style="width:72%"></div></div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(var(--success-rgb), 0.15);color:var(--success-400);">🎯</div>
+          <div class="stat-value" style="color:var(--success-400);" id="dash-skills">8/12</div>
+          <div class="stat-label">Skills Matched</div>
+          <div class="progress-bar"><div class="progress-bar-fill success" style="width:67%"></div></div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(var(--accent-rgb), 0.15);color:var(--accent-400);">📈</div>
+          <div class="stat-value" style="color:var(--accent-400);" id="dash-quiz-score">85%</div>
+          <div class="stat-label">Avg Quiz Score</div>
+          <div class="progress-bar"><div class="progress-bar-fill accent" style="width:85%"></div></div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(var(--warning-rgb), 0.15);color:var(--warning-400);">🎤</div>
+          <div class="stat-value" style="color:var(--warning-400);">3</div>
+          <div class="stat-label">Mock Interviews</div>
+          <div class="progress-bar"><div class="progress-bar-fill warm" style="width:60%"></div></div>
+        </div>
+      </div>
+      <div class="grid-2 animate-fadeInUp delay-2">
+        <div class="glass-card dashboard-chart">
+          <h4 style="margin-bottom:16px;">Skills Overview</h4>
+          <canvas id="skills-chart" width="400" height="250"></canvas>
+        </div>
+        <div class="glass-card dashboard-activity">
+          <h4 style="margin-bottom:16px;">Recent Activity</h4>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--primary-500);"></div>
+            <div>
+              <div class="activity-text">Resume analysis completed – Score: 72/100</div>
+              <div class="activity-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--success-500);"></div>
+            <div>
+              <div class="activity-text">Completed Python quiz – 85% score</div>
+              <div class="activity-time">5 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--accent-500);"></div>
+            <div>
+              <div class="activity-text">Mock interview session – "Tell me about yourself"</div>
+              <div class="activity-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--warning-500);"></div>
+            <div>
+              <div class="activity-text">New learning plan generated for Data Science role</div>
+              <div class="activity-time">2 days ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--primary-500);"></div>
+            <div>
+              <div class="activity-text">Profile updated with new skills</div>
+              <div class="activity-time">3 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-3 animate-fadeInUp delay-3" style="margin-top:24px;">
+        <div class="glass-card" style="padding:24px;cursor:pointer;" onclick="navigate('resume')">
+          <div style="font-size:2rem;margin-bottom:12px;">📄</div>
+          <h4>Analyze Resume</h4>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">Upload and get AI feedback</p>
+        </div>
+        <div class="glass-card" style="padding:24px;cursor:pointer;" onclick="navigate('quiz')">
+          <div style="font-size:2rem;margin-bottom:12px;">❓</div>
+          <h4>Take a Quiz</h4>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">Test your knowledge</p>
+        </div>
+        <div class="glass-card" style="padding:24px;cursor:pointer;" onclick="navigate('interview')">
+          <div style="font-size:2rem;margin-bottom:12px;">🎤</div>
+          <h4>Practice Interview</h4>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">AI-powered mock sessions</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: PROFILE ═══ -->
+  <div class="page" id="page-profile">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>My Profile</h1>
+        <p>Manage your personal and professional information.</p>
+      </div>
+      <div class="grid-2 animate-fadeInUp delay-1">
+        <div class="glass-card" style="padding:32px;">
+          <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px;">
+            <div style="width:80px;height:80px;border-radius:50%;background:var(--gradient-accent);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;" id="profile-avatar">U</div>
+            <div>
+              <h3 id="profile-name">User</h3>
+              <p style="color:var(--text-secondary);font-size:0.9rem;" id="profile-email">user@example.com</p>
+              <span class="badge badge-primary" id="profile-domain">Software Dev</span>
+            </div>
+          </div>
+          <form onsubmit="saveProfile(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="profile-name-input" value="">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="profile-email-input" value="">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Role</label>
+              <input type="text" class="form-input" id="profile-role" placeholder="e.g., Full Stack Developer" value="Full Stack Developer">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience Level</label>
+              <select class="form-input" id="profile-exp">
+                <option value="fresher">Fresher (0-1 years)</option>
+                <option value="junior">Junior (1-3 years)</option>
+                <option value="mid">Mid-Level (3-5 years)</option>
+                <option value="senior">Senior (5+ years)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Skills (comma separated)</label>
+              <textarea class="form-input" id="profile-skills" rows="3" placeholder="Python, JavaScript, React, SQL...">Python, JavaScript, React, SQL, Machine Learning</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+        <div>
+          <div class="glass-card" style="padding:24px;margin-bottom:20px;">
+            <h4 style="margin-bottom:16px;">🏆 Achievements</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <div class="badge badge-success">✅ Profile Complete</div>
+              <div class="badge badge-primary">📄 First Resume</div>
+              <div class="badge badge-warning">⭐ Quiz Master</div>
+              <div class="badge badge-success">🎤 Interview Pro</div>
+            </div>
+          </div>
+          <div class="glass-card" style="padding:24px;">
+            <h4 style="margin-bottom:16px;">📊 Quick Stats</h4>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-secondary)">Resumes Analyzed</span><span style="font-weight:700;">3</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-secondary)">Quizzes Taken</span><span style="font-weight:700;">12</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-secondary)">Mock Interviews</span><span style="font-weight:700;">5</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-secondary)">Courses Completed</span><span style="font-weight:700;">8</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-secondary)">Member Since</span><span style="font-weight:700;">Mar 2026</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: RESUME UPLOAD & ANALYSIS ═══ -->
+  <div class="page" id="page-resume">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Resume Analysis 📄</h1>
+        <p>Upload your resume and get instant AI-powered feedback and improvement suggestions.</p>
+      </div>
+      <div id="resume-upload-section" class="animate-fadeInUp delay-1">
+        <div class="upload-area" id="upload-area" onclick="document.getElementById('resume-file').click()">
+          <input type="file" id="resume-file" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="handleResumeUpload(event)">
+          <div class="upload-icon">📤</div>
+          <h3>Drop your resume here or click to upload</h3>
+          <p>Supports PDF, DOC, DOCX, TXT (Max 10MB)</p>
+          <div style="margin-top:16px;">
+            <button class="btn btn-outline btn-sm">Choose File</button>
+          </div>
+        </div>
+      </div>
+      <div id="resume-analysis-section" style="display:none;" class="animate-fadeInUp">
+        <div class="grid-2" style="margin-bottom:24px;">
+          <div class="glass-card analysis-section" style="text-align:center;">
+            <h4 style="margin-bottom:20px;">Overall Resume Score</h4>
+            <div class="score-circle" id="resume-score-display">72</div>
+            <p style="color:var(--text-secondary);margin-top:16px;font-size:0.9rem;">Your resume is <strong style="color:var(--warning-400);">Good</strong> – with some improvements it can be great!</p>
+          </div>
+          <div class="glass-card analysis-section">
+            <h4 style="margin-bottom:20px;">Category Breakdown</h4>
+            <div class="skill-bar"><span class="skill-bar-label">Formatting</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%;background:var(--gradient-success);"></div></div><span style="font-size:0.85rem;width:32px;text-align:right;">85%</span></div>
+            <div class="skill-bar"><span class="skill-bar-label">Skills Listed</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%;background:var(--gradient-primary);"></div></div><span style="font-size:0.85rem;width:32px;text-align:right;">70%</span></div>
+            <div class="skill-bar"><span class="skill-bar-label">Experience</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:65%;background:var(--gradient-accent);"></div></div><span style="font-size:0.85rem;width:32px;text-align:right;">65%</span></div>
+            <div class="skill-bar"><span class="skill-bar-label">Education</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%;background:var(--gradient-success);"></div></div><span style="font-size:0.85rem;width:32px;text-align:right;">90%</span></div>
+            <div class="skill-bar"><span class="skill-bar-label">Projects</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:60%;background:var(--gradient-warm);"></div></div><span style="font-size:0.85rem;width:32px;text-align:right;">60%</span></div>
+            <div class="skill-bar"><span class="skill-bar-label">Keywords</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:55%;background:var(--gradient-warm);"></div></div><span style="font-size:0.85rem;width:32px;text-align:right;">55%</span></div>
+          </div>
+        </div>
+        <div class="glass-card" style="padding:24px;margin-bottom:20px;">
+          <h4 style="margin-bottom:16px;">💡 AI Recommendations</h4>
+          <div id="resume-recommendations"></div>
+        </div>
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:16px;">🔍 Detected Skills</h4>
+          <div id="detected-skills" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        </div>
+        <div style="margin-top:20px;text-align:center;">
+          <button class="btn btn-secondary" onclick="resetResumeUpload()">Upload Another Resume</button>
+          <button class="btn btn-primary" style="margin-left:12px;" onclick="navigate('skills')">View Skill Analysis →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: RESUME BUILDER ═══ -->
+  <div class="page" id="page-resume-builder">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Resume Builder ✏️</h1>
+        <p>Create a professional resume with our AI-powered builder.</p>
+      </div>
+      <div class="grid-2 animate-fadeInUp delay-1">
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:20px;">Personal Details</h4>
+          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="rb-name" placeholder="John Doe" value=""></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="rb-email" placeholder="john@example.com"></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="rb-phone" placeholder="+91 9876543210"></div>
+          <div class="form-group"><label class="form-label">Location</label><input type="text" class="form-input" id="rb-location" placeholder="Bangalore, India"></div>
+          <div class="form-group"><label class="form-label">LinkedIn</label><input type="url" class="form-input" id="rb-linkedin" placeholder="https://linkedin.com/in/johndoe"></div>
+          <div class="form-group"><label class="form-label">GitHub</label><input type="url" class="form-input" id="rb-github" placeholder="https://github.com/johndoe"></div>
+          <h4 style="margin:24px 0 16px;">Professional Summary</h4>
+          <div class="form-group"><textarea class="form-input" id="rb-summary" rows="4" placeholder="A brief professional summary..."></textarea></div>
+          <h4 style="margin:24px 0 16px;">Skills</h4>
+          <div class="form-group"><textarea class="form-input" id="rb-skills" rows="2" placeholder="Python, JavaScript, React, SQL..."></textarea></div>
+          <h4 style="margin:24px 0 16px;">Experience</h4>
+          <div class="form-group"><textarea class="form-input" id="rb-experience" rows="5" placeholder="Company | Role | Duration\n- Description of work..."></textarea></div>
+          <h4 style="margin:24px 0 16px;">Education</h4>
+          <div class="form-group"><textarea class="form-input" id="rb-education" rows="3" placeholder="Degree | University | Year"></textarea></div>
+          <h4 style="margin:24px 0 16px;">Projects & Certifications</h4>
+          <div class="form-group"><textarea class="form-input" id="rb-projects" rows="4" placeholder="Project Name\n- Description..."></textarea></div>
+          <button class="btn btn-primary" onclick="generateResumePreview()">Generate Preview →</button>
+        </div>
+        <div class="glass-card" style="padding:24px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h4>Live Preview</h4>
+            <div style="display:flex;gap:8px;">
+              <select class="form-input" id="rb-template-select" style="padding:4px 8px;font-size:0.8rem;width:auto;" onchange="generateResumePreview()">
+                <option value="modern">Modern Style</option>
+                <option value="creative">Creative Style</option>
+                <option value="executive">Executive Style</option>
+              </select>
+              <button class="btn btn-sm btn-success" onclick="downloadResume()">⬇ Download</button>
+            </div>
+          </div>
+          <div id="resume-preview" class="resume-modern">
+            <div style="text-align:center;border-bottom:2px solid #6366f1;padding-bottom:16px;margin-bottom:16px;">
+              <h2 style="color:#1a1a2e;font-size:1.4rem;" id="rv-name">Your Name</h2>
+              <p style="color:#64748b;font-size:0.8rem;" id="rv-contact">email@example.com | +91 000 000 0000 | Location</p>
+            </div>
+            <div id="rv-summary-section" style="margin-bottom:16px;display:none;">
+              <h4 style="color:#6366f1;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px;">Professional Summary</h4>
+              <p id="rv-summary" style="color:#475569;"></p>
+            </div>
+            <div id="rv-skills-section" style="margin-bottom:16px;display:none;">
+              <h4 style="color:#6366f1;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px;">Skills</h4>
+              <p id="rv-skills" style="color:#475569;"></p>
+            </div>
+            <div id="rv-experience-section" style="margin-bottom:16px;display:none;">
+              <h4 style="color:#6366f1;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px;">Experience</h4>
+              <div id="rv-experience" style="color:#475569;white-space:pre-line;"></div>
+            </div>
+            <div id="rv-education-section" style="margin-bottom:16px;display:none;">
+              <h4 style="color:#6366f1;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px;">Education</h4>
+              <div id="rv-education" style="color:#475569;white-space:pre-line;"></div>
+            </div>
+            <div id="rv-projects-section" style="margin-bottom:16px;display:none;">
+              <h4 style="color:#6366f1;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px;">Projects</h4>
+              <div id="rv-projects" style="color:#475569;white-space:pre-line;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: SKILL ANALYSIS ═══ -->
+  <div class="page" id="page-skills">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Skill Analysis 🎯</h1>
+        <p>Compare your skills against industry requirements and identify gaps.</p>
+      </div>
+      <div class="animate-fadeInUp delay-1" style="margin-bottom:24px;">
+        <div class="form-group" style="max-width:400px;">
+          <label class="form-label">Target Role</label>
+          <select class="form-input" id="skill-target-role" onchange="updateSkillAnalysis()">
+            <option value="fullstack">Full Stack Developer</option>
+            <option value="frontend">Frontend Developer</option>
+            <option value="backend">Backend Developer</option>
+            <option value="data-scientist">Data Scientist</option>
+            <option value="devops">DevOps Engineer</option>
+            <option value="mobile">Mobile Developer</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2 animate-fadeInUp delay-2">
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:20px;">Your Skills vs Required Skills</h4>
+          <div id="skill-comparison-bars"></div>
+        </div>
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:20px;">Skill Radar</h4>
+          <canvas id="skill-radar-chart" width="350" height="350"></canvas>
+        </div>
+      </div>
+      <div class="grid-2 animate-fadeInUp delay-3" style="margin-top:24px;">
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:16px;color:var(--success-400);">✅ Your Strengths</h4>
+          <div id="skill-strengths"></div>
+        </div>
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:16px;color:var(--error-400);">⚠️ Skills to Develop</h4>
+          <div id="skill-gaps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: CAREER RECOMMENDATIONS ═══ -->
+  <div class="page" id="page-careers">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Career Paths 🚀</h1>
+        <p>Discover career opportunities that match your skills and interests.</p>
+      </div>
+      <div id="career-cards" class="animate-fadeInUp delay-1"></div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: LEARNING PLAN ═══ -->
+  <div class="page" id="page-learning">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Learning Plan 📚</h1>
+        <p>Your personalized weekly learning roadmap to bridge skill gaps.</p>
+      </div>
+      <div class="animate-fadeInUp delay-1" style="margin-bottom:24px;">
+        <div class="glass-card" style="padding:20px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <h4>Overall Progress</h4>
+            <p style="color:var(--text-secondary);font-size:0.9rem;">3 of 8 weeks completed</p>
+          </div>
+          <div style="font-size:2rem;font-weight:900;color:var(--primary-400);">37%</div>
+        </div>
+      </div>
+      <div class="learning-timeline animate-fadeInUp delay-2" id="learning-timeline"></div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: QUIZ ═══ -->
+  <div class="page" id="page-quiz">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Skill Assessment ❓</h1>
+        <p>Test your domain knowledge with AI-curated quizzes.</p>
+      </div>
+      <div id="quiz-selection" class="animate-fadeInUp delay-1">
+        <div class="grid-3">
+          <div class="glass-card" style="padding:24px;cursor:pointer;text-align:center;" onclick="startQuiz('python')">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🐍</div>
+            <h4>Python</h4>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">15 Questions • 20 mins</p>
+            <span class="badge badge-primary" style="margin-top:12px;">Intermediate</span>
+          </div>
+          <div class="glass-card" style="padding:24px;cursor:pointer;text-align:center;" onclick="startQuiz('javascript')">
+            <div style="font-size:2.5rem;margin-bottom:12px;">⚡</div>
+            <h4>JavaScript</h4>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">15 Questions • 20 mins</p>
+            <span class="badge badge-warning" style="margin-top:12px;">Advanced</span>
+          </div>
+          <div class="glass-card" style="padding:24px;cursor:pointer;text-align:center;" onclick="startQuiz('react')">
+            <div style="font-size:2.5rem;margin-bottom:12px;">⚛️</div>
+            <h4>React.js</h4>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">12 Questions • 15 mins</p>
+            <span class="badge badge-primary" style="margin-top:12px;">Intermediate</span>
+          </div>
+          <div class="glass-card" style="padding:24px;cursor:pointer;text-align:center;" onclick="startQuiz('sql')">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🗃️</div>
+            <h4>SQL & Databases</h4>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">10 Questions • 15 mins</p>
+            <span class="badge badge-success" style="margin-top:12px;">Beginner</span>
+          </div>
+          <div class="glass-card" style="padding:24px;cursor:pointer;text-align:center;" onclick="startQuiz('ml')">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🤖</div>
+            <h4>Machine Learning</h4>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">12 Questions • 20 mins</p>
+            <span class="badge badge-warning" style="margin-top:12px;">Advanced</span>
+          </div>
+          <div class="glass-card" style="padding:24px;cursor:pointer;text-align:center;" onclick="startQuiz('dsa')">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🧩</div>
+            <h4>DSA</h4>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">10 Questions • 15 mins</p>
+            <span class="badge badge-primary" style="margin-top:12px;">Intermediate</span>
+          </div>
+        </div>
+      </div>
+      <div id="quiz-active-section" style="display:none;" class="quiz-container animate-fadeInUp">
+        <div class="quiz-header">
+          <div class="quiz-progress"><span id="quiz-current-q">1</span> / <span id="quiz-total-q">10</span></div>
+          <div class="quiz-timer">⏱ <span id="quiz-timer-display">20:00</span></div>
+        </div>
+        <div class="progress-bar" style="margin-bottom:24px;"><div class="progress-bar-fill primary" id="quiz-progress-fill" style="width:10%"></div></div>
+        <div class="quiz-question glass-card">
+          <h3 id="quiz-question-text">Loading question...</h3>
+          <div id="quiz-options-container"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:20px;">
+          <button class="btn btn-secondary" id="quiz-prev-btn" onclick="quizPrev()" disabled>← Previous</button>
+          <button class="btn btn-primary" id="quiz-next-btn" onclick="quizNext()">Next →</button>
+        </div>
+      </div>
+      <div id="quiz-results-section" style="display:none;" class="quiz-container animate-fadeInUp">
+        <div class="glass-card" style="padding:40px;text-align:center;">
+          <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
+          <h2>Quiz Complete!</h2>
+          <div class="score-circle" style="margin:24px auto;" id="quiz-score-display">0%</div>
+          <p style="color:var(--text-secondary);margin-bottom:24px;" id="quiz-result-text">You got 0 out of 10 correct.</p>
+          <div style="display:flex;gap:16px;justify-content:center;">
+            <button class="btn btn-secondary" onclick="showQuizSelection()">Back to Quizzes</button>
+            <button class="btn btn-primary" onclick="navigate('learning')">View Learning Plan →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: MOCK INTERVIEW ═══ -->
+  <div class="page" id="page-interview">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Mock Interview 🎤</h1>
+        <p>Practice with our AI interviewer and get real-time feedback.</p>
+      </div>
+      <div id="interview-setup" class="animate-fadeInUp delay-1">
+        <div class="glass-card" style="padding:32px;max-width:600px;margin:0 auto;text-align:center;">
+          <div style="font-size:4rem;margin-bottom:16px;">🤖</div>
+          <h3>Start a Mock Interview Session</h3>
+          <p style="color:var(--text-secondary);margin:12px 0 24px;">Choose your domain and let the AI interview you with role-specific questions.</p>
+          <div class="form-group" style="text-align:left;max-width:300px;margin:0 auto 20px;">
+            <label class="form-label">Interview Domain</label>
+            <select class="form-input" id="interview-domain">
+              <option value="general">General HR / Behavioral</option>
+              <option value="frontend">Frontend Development</option>
+              <option value="backend">Backend Development</option>
+              <option value="fullstack">Full Stack Development</option>
+              <option value="data-science">Data Science</option>
+              <option value="system-design">System Design</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-lg" onclick="startInterview()">Begin Interview →</button>
+        </div>
+      </div>
+      <div id="interview-active" style="display:none;" class="interview-container animate-fadeInUp">
+        <div class="glass-card" style="margin-bottom:16px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+          <div><span style="font-weight:600;">AI Interviewer</span> <span class="badge badge-primary" id="interview-domain-badge">General</span></div>
+          <div style="display:flex;gap:8px;">
+            <span class="badge badge-success" id="interview-q-count">Q 1/5</span>
+            <button class="btn btn-sm btn-secondary" onclick="endInterview()">End</button>
+          </div>
+        </div>
+        <div class="glass-card chat-area" id="chat-area"></div>
+        <div class="glass-card chat-input-area">
+          <input type="text" class="form-input" id="interview-input" placeholder="Type your answer..." onkeypress="if(event.key==='Enter')sendInterviewAnswer()">
+          <button class="btn btn-primary" onclick="sendInterviewAnswer()">Send</button>
+        </div>
+      </div>
+      <div id="interview-feedback" style="display:none;" class="interview-container animate-fadeInUp">
+        <div class="glass-card" style="padding:32px;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:16px;">📋</div>
+          <h3>Interview Feedback</h3>
+          <div class="grid-3" style="margin:24px 0;">
+            <div><div style="font-size:1.8rem;font-weight:800;color:var(--primary-400);" id="fb-overall">7/10</div><div style="font-size:0.85rem;color:var(--text-secondary);">Overall</div></div>
+            <div><div style="font-size:1.8rem;font-weight:800;color:var(--success-400);" id="fb-technical">8/10</div><div style="font-size:0.85rem;color:var(--text-secondary);">Technical</div></div>
+            <div><div style="font-size:1.8rem;font-weight:800;color:var(--accent-400);" id="fb-communication">7/10</div><div style="font-size:0.85rem;color:var(--text-secondary);">Communication</div></div>
+          </div>
+          <div style="text-align:left;margin-top:20px;" id="interview-feedback-details"></div>
+          <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+            <button class="btn btn-secondary" onclick="showInterviewSetup()">New Interview</button>
+            <button class="btn btn-primary" onclick="navigate('progress')">View Progress →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: PROGRESS ═══ -->
+  <div class="page" id="page-progress">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Progress Tracking 📈</h1>
+        <p>Monitor your growth and career preparation journey.</p>
+      </div>
+      <div class="dashboard-grid animate-fadeInUp delay-1">
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(99,102,241,0.15);color:var(--primary-400);">📊</div>
+          <div class="stat-value text-gradient">72%</div>
+          <div class="stat-label">Overall Readiness</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(34,197,94,0.15);color:var(--success-400);">📚</div>
+          <div class="stat-value" style="color:var(--success-400);">37%</div>
+          <div class="stat-label">Learning Progress</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(236,72,153,0.15);color:var(--accent-400);">❓</div>
+          <div class="stat-value" style="color:var(--accent-400);">12</div>
+          <div class="stat-label">Quizzes Completed</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon" style="background:rgba(245,158,11,0.15);color:var(--warning-400);">🎤</div>
+          <div class="stat-value" style="color:var(--warning-400);">5</div>
+          <div class="stat-label">Interviews Done</div>
+        </div>
+      </div>
+      <div class="grid-2 animate-fadeInUp delay-2">
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:20px;">Quiz Performance Over Time</h4>
+          <canvas id="progress-quiz-chart" width="400" height="250"></canvas>
+        </div>
+        <div class="glass-card" style="padding:24px;">
+          <h4 style="margin-bottom:20px;">Skill Growth</h4>
+          <canvas id="progress-skill-chart" width="400" height="250"></canvas>
+        </div>
+      </div>
+      <div class="glass-card animate-fadeInUp delay-3" style="padding:24px;margin-top:24px;">
+        <h4 style="margin-bottom:16px;">📅 Activity Timeline</h4>
+        <div id="progress-timeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: RESOURCES ═══ -->
+  <div class="page" id="page-resources">
+    <div class="main-content">
+      <div class="page-header animate-fadeInUp">
+        <h1>Learning Resources 🔗</h1>
+        <p>Curated tutorials, courses, and materials for your career domain.</p>
+      </div>
+      <div class="tabs animate-fadeInUp delay-1">
+        <div class="tab active" onclick="filterResources('all', this)">All</div>
+        <div class="tab" onclick="filterResources('video', this)">Videos</div>
+        <div class="tab" onclick="filterResources('article', this)">Articles</div>
+        <div class="tab" onclick="filterResources('course', this)">Courses</div>
+        <div class="tab" onclick="filterResources('tutorial', this)">Tutorials</div>
+      </div>
+      <div class="grid-3 animate-fadeInUp delay-2" id="resources-grid"></div>
+    </div>
+  </div>
+
+  <!-- ═══ TOAST CONTAINER ═══ -->
+  <div id="toast-container"></div>
+
+  <!-- ═══ SCRIPTS ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script src="modules.js"></script>
+  <script src="supabase.js"></script>
+</body>
+</html>

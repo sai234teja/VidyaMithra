@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | VidyaMitra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function() {
+      let savedTheme = localStorage.getItem('vm_theme') || 'dark';
+      if (savedTheme === 'system') savedTheme = 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <style>
+    :root {
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-main);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      background-image: var(--gradient-bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* --- Animated Background --- */
+    .bg-blobs {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      filter: blur(80px);
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: 0.15;
+      animation: move 20s infinite alternate;
+    }
+
+    .blob-1 { width: 400px; height: 400px; top: -100px; left: -100px; background: var(--primary); animation-duration: 25s; }
+    .blob-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; background: var(--accent); animation-duration: 30s; animation-delay: -5s; }
+    .blob-3 { width: 250px; height: 250px; top: 40%; left: 60%; background: var(--primary-400); opacity: 0.1; animation-duration: 20s; animation-delay: -10s; }
+
+    @keyframes move {
+      0% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(50px, 80px) scale(1.1); }
+      66% { transform: translate(-40px, 40px) scale(0.9); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 460px;
+      padding: 24px;
+      z-index: 10;
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-color);
+      border-radius: 32px;
+      padding: 48px;
+      box-shadow: var(--shadow-xl);
+      animation: authCardEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes authCardEntry {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-container {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 10px 25px rgba(var(--primary-rgb), 0.3);
+      animation: logoPulse 4s infinite ease-in-out;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(var(--primary-rgb), 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(var(--primary-rgb), 0.5); }
+    }
+
+    .auth-card h2 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .auth-card p.subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* --- Premium Inputs --- */
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px 20px 18px 52px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-500);
+      background: var(--bg-glass-hover);
+      box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.15);
+      transform: translateY(-2px);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      font-size: 1.25rem;
+      opacity: 0.5;
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+
+    .form-input:focus + .input-icon {
+      opacity: 1;
+      color: var(--primary-500);
+      transform: scale(1.1);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 18px;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 16px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 25px -5px rgba(var(--primary-rgb), 0.4);
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -5px rgba(var(--primary-rgb), 0.5);
+    }
+
+    .btn-submit:active {
+      transform: translateY(-1px);
+    }
+
+    .social-auth {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn-social {
+      flex: 1;
+      padding: 14px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-social:hover {
+      background: var(--bg-glass-hover);
+      border-color: var(--primary-400);
+      transform: translateY(-2px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 32px 0;
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .auth-footer a {
+      color: var(--primary-500);
+      text-decoration: none;
+      font-weight: 700;
+      margin-left: 6px;
+      transition: color 0.3s;
+    }
+
+    .auth-footer a:hover {
+      color: var(--primary-400);
+      text-decoration: underline;
+    }
+
+    .back-home {
+      position: fixed;
+      top: 40px;
+      left: 40px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg-glass);
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+
+    .back-home:hover {
+      background: var(--bg-glass-hover);
+      transform: translateX(-5px);
+    }
+
+    /* Notification */
+    .toast {
+      position: fixed;
+      top: 40px;
+      right: 40px;
+      padding: 16px 24px;
+      border-radius: 16px;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      border-left: 4px solid var(--primary-500);
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateX(200%);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast.visible { transform: translateX(0); }
+    .toast.error { border-left-color: var(--error-500); }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <a href="index.html" class="back-home">
+    <span>←</span> Back to Home
+  </a>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo-container">🎓</div>
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Enter your credentials to continue</p>
+      </div>
+
+      <form id="signin-form">
+        <div class="form-group">
+          <input type="email" id="email" class="form-input" placeholder="Email Address" required>
+          <span class="input-icon">✉️</span>
+        </div>
+
+        <div class="form-group">
+          <input type="password" id="password" class="form-input" placeholder="Password" required>
+          <span class="input-icon">🔒</span>
+          <a href="#" style="position:absolute; right:10px; top:20px; font-size:0.75rem; color:var(--primary); text-decoration:none; font-weight:600;">Forgot?</a>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <span>Sign In</span>
+        </button>
+      </form>
+
+      <div class="divider">or continue with</div>
+
+      <div class="social-auth">
+        <div class="btn-social" title="Google">
+          <img src="https://www.svgrepo.com/show/355037/google.svg" width="20" height="20" alt="G">
+        </div>
+        <div class="btn-social" title="Apple">
+          <img src="https://www.svgrepo.com/show/444662/apple.svg" width="20" height="20" alt="A" style="filter: invert(1);">
+        </div>
+        <div class="btn-social" title="GitHub">
+          <img src="https://www.svgrepo.com/show/350020/github.svg" width="20" height="20" alt="GH" style="filter: invert(1);">
+        </div>
+      </div>
+
+      <button id="btn-demo" class="btn-submit" style="background:transparent; border:1px solid var(--primary); color:var(--primary); margin-top:24px; box-shadow:none;">
+        <span>✨ Try Demo Account</span>
+      </button>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="signup.html">Create One</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">
+    <span id="toast-icon">✅</span>
+    <span id="toast-msg">Success! Redirecting...</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    const form = document.getElementById('signin-form');
+    const toast = document.getElementById('toast');
+    const demoBtn = document.getElementById('btn-demo');
+
+    function showToast(msg, type = 'success') {
+      const msgEl = document.getElementById('toast-msg');
+      const iconEl = document.getElementById('toast-icon');
+      msgEl.textContent = msg;
+      iconEl.textContent = type === 'success' ? '✅' : '❌';
+      toast.className = `toast visible ${type}`;
+      setTimeout(() => toast.classList.remove('visible'), 4000);
+    }
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      const submitBtn = form.querySelector('button[type="submit"] span');
+      submitBtn.textContent = 'Verifying...';
+
+      if (typeof supabaseSignIn === 'function' && supabaseReady) {
+        const result = await supabaseSignIn(email, password);
+        if (result.success) {
+          showToast('Sign in successful!');
+          setTimeout(() => window.location.href = 'index.html?page=dashboard', 1500);
+        } else {
+          showToast(result.error, 'error');
+          submitBtn.textContent = 'Sign In';
+        }
+      } else {
+        showToast('Using local session (Supabase disconnected)');
+        localStorage.setItem('vm_current_user', JSON.stringify({ name: 'Local User', email }));
+        setTimeout(() => window.location.href = 'index.html?page=dashboard', 1500);
+      }
+    };
+
+    demoBtn.onclick = () => {
+      localStorage.setItem('vm_current_user', JSON.stringify({
+        name: 'Rishi Kumar',
+        email: 'rishi@demo.com',
+        domain: 'software',
+        skills: 'Python, React, SQL',
+        role: 'Full Stack Developer',
+        exp: 'junior'
+      }));
+      window.location.href = 'index.html?page=dashboard';
+    };
+  </script>
+</body>
+</html>
